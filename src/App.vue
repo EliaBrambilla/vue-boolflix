@@ -1,17 +1,39 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <HeaderComp @search="searchAll" />
+    <MainComp :arrayFilm="FilterFilms" :arraySerie="FilterSerie" />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import HeaderComp from './components/HeaderComp.vue'
+import MainComp from './components/MainComp.vue'
+import axios from 'axios'
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    HeaderComp,
+    MainComp,
+  },
+  data(){
+    return{
+      FilterFilms: [],
+      FilterSerie: [],
+    }
+  },
+  mounted(){
+  },
+  methods: {
+    searchAll(valoreInput){
+        axios.get('https://api.themoviedb.org/3/search/movie?api_key=22fe714c30b0e22065d5943a4abfc6fa&query=' + valoreInput)
+        .then((response)=>{
+          this.FilterFilms = response.data.results;
+        });
+        axios.get('https://api.themoviedb.org/3/search/tv?api_key=22fe714c30b0e22065d5943a4abfc6fa&language=it_IT&query=' + valoreInput)
+        .then((response) =>{
+          this.FilterSerie = response.data.results;
+        })
+    }
   }
 }
 </script>
@@ -19,10 +41,7 @@ export default {
 <style lang="scss">
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  height: 100vh;
+  background-color: #424242;
 }
 </style>
